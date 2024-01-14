@@ -1,4 +1,4 @@
-package com.joaquin.cryptotoday
+package com.joaquin.cryptotoday.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.joaquin.cryptotoday.ui.theme.CryptoTodayTheme
+import com.joaquin.cryptotoday.presentation.ui.theme.CryptoTodayTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

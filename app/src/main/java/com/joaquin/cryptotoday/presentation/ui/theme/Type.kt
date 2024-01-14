@@ -1,4 +1,4 @@
-package com.joaquin.cryptotoday.ui.theme
+package com.joaquin.cryptotoday.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

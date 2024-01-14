@@ -1,4 +1,4 @@
-package com.joaquin.cryptotoday.ui.theme
+package com.joaquin.cryptotoday.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
