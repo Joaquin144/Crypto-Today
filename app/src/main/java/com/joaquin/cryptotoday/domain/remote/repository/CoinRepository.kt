@@ -1,4 +1,4 @@
-package com.joaquin.cryptotoday.domain
+package com.joaquin.cryptotoday.domain.remote.repository
 
 import com.joaquin.cryptotoday.data.remote.responses.ListApiResponse
 import com.joaquin.cryptotoday.data.remote.responses.LiveApiResponse

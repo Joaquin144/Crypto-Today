@@ -2,7 +2,7 @@ package com.joaquin.cryptotoday.di
 
 import com.joaquin.cryptotoday.data.remote.api.CryptoApi
 import com.joaquin.cryptotoday.data.remote.repository.CoinRepositoryImpl
-import com.joaquin.cryptotoday.domain.CoinRepository
+import com.joaquin.cryptotoday.domain.remote.repository.CoinRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
