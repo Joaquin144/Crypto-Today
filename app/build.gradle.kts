@@ -31,6 +31,8 @@ android {
             "COIN_LAYER_API_KEY",
             "\"${localProperties.getProperty("COIN_LAYER_API_KEY")}\""
         )
+
+        buildConfigField("String", "BASE_URL", "\"http://api.coinlayer.com\"")
     }
 
     buildTypes {
