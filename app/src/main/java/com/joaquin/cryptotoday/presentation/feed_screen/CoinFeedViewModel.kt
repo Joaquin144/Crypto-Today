@@ -9,6 +9,7 @@ import com.joaquin.cryptotoday.domain.CoinFeedModel
 import com.joaquin.cryptotoday.domain.remote.repository.CoinRepository
 import com.joaquin.cryptotoday.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -21,6 +22,7 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
 
     private val _liveCoinsFlow = MutableStateFlow<LiveApiCoinState?>(null)
     private val _listCoinsFlow = MutableStateFlow<ListApiCoinState?>(null)
+    private var feedFetchingJob: Job? = null
 
     //Only This flow would get collected by UI
     val coinFeed: Flow<CoinFeedState> = combine(
@@ -30,42 +32,50 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
         mergeLiveAndListStateFlows(live, list)
     }
 
-    fun fetchCoinsFeed() = viewModelScope.launch {
-        repository.fetchLiveCoins().collectLatest { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _liveCoinsFlow.value = LiveApiCoinState(liveCoins = result.data)
-                }
+    init {
+        fetchCoinsFeed()
+    }
 
-                is Resource.Error -> {
-                    _liveCoinsFlow.value =
-                        LiveApiCoinState(error = result.message ?: DEFAULT_ERROR_MESSAGE)
-                }
+    private fun fetchCoinsFeed() {
+        feedFetchingJob?.cancel()//Clear any previous job pending
+        feedFetchingJob = viewModelScope.launch() {
+            repository.fetchLiveCoins().collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _liveCoinsFlow.value = LiveApiCoinState(liveCoins = result.data)
+                    }
 
-                is Resource.Loading -> {
-                    _liveCoinsFlow.value = LiveApiCoinState(isLoading = true)
+                    is Resource.Error -> {
+                        _liveCoinsFlow.value =
+                            LiveApiCoinState(error = result.message ?: DEFAULT_ERROR_MESSAGE)
+                    }
+
+                    is Resource.Loading -> {
+                        _liveCoinsFlow.value = LiveApiCoinState(isLoading = true)
+                    }
                 }
             }
-        }
 
-        repository.fetchListCoins().collectLatest { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _listCoinsFlow.value = ListApiCoinState(listCoins = result.data)
-                }
+            repository.fetchListCoins().collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _listCoinsFlow.value = ListApiCoinState(listCoins = result.data)
+                    }
 
-                is Resource.Error -> {
-                    _listCoinsFlow.value =
-                        ListApiCoinState(error = result.message ?: DEFAULT_ERROR_MESSAGE)
-                }
+                    is Resource.Error -> {
+                        _listCoinsFlow.value =
+                            ListApiCoinState(error = result.message ?: DEFAULT_ERROR_MESSAGE)
+                    }
 
-                is Resource.Loading -> {
-                    _listCoinsFlow.value = ListApiCoinState(isLoading = true)
+                    is Resource.Loading -> {
+                        _listCoinsFlow.value = ListApiCoinState(isLoading = true)
+                    }
                 }
             }
         }
     }
 
+    //Logic to merge 2 StateFlows
     private fun mergeLiveAndListStateFlows(
         live: LiveApiCoinState?,
         list: ListApiCoinState?
@@ -93,6 +103,7 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
         }
     }
 
+    //Logic to merge 2 different Responses
     private fun mergeLiveAndListResponses(
         liveCoins: LiveApiResponse?,
         listCoins: ListApiResponse?

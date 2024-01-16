@@ -6,7 +6,7 @@ import com.joaquin.cryptotoday.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface CoinRepository {
-    fun fetchLiveCoins(): Flow<Resource<LiveApiResponse>>
+    suspend fun fetchLiveCoins(): Flow<Resource<LiveApiResponse>>
 
-    fun fetchListCoins(): Flow<Resource<ListApiResponse>>
+    suspend fun fetchListCoins(): Flow<Resource<ListApiResponse>>
 }

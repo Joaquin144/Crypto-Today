@@ -13,7 +13,7 @@ const val DEFAULT_ERROR_MESSAGE = "Unknown Exception occurred"
 
 class CoinRepositoryImpl(private val cryptoApi: CryptoApi) : CoinRepository {
 
-    override fun fetchLiveCoins() = flow {
+    override suspend fun fetchLiveCoins() = flow {
         emit(Resource.Loading<LiveApiResponse>())
         try {
             val liveRes = cryptoApi.fetchLiveCoins(BuildConfig.COIN_LAYER_API_KEY)
@@ -28,7 +28,7 @@ class CoinRepositoryImpl(private val cryptoApi: CryptoApi) : CoinRepository {
         }
     }
 
-    override fun fetchListCoins() = flow {
+    override suspend fun fetchListCoins() = flow {
         emit(Resource.Loading<ListApiResponse>())
         try {
             val listRes = cryptoApi.fetchListCoins(BuildConfig.COIN_LAYER_API_KEY)

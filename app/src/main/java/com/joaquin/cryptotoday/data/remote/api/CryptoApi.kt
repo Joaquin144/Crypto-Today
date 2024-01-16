@@ -7,9 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CryptoApi {
-    @GET("/live")
-    fun fetchLiveCoins(@Query("access_key") apiKey: String): Response<LiveApiResponse>
+    @GET("live")
+    suspend fun fetchLiveCoins(@Query("access_key") apiKey: String): Response<LiveApiResponse>
 
-    @GET("/list")
-    fun fetchListCoins(@Query("access_key") apiKey: String): Response<ListApiResponse>
+    @GET("list")
+    suspend fun fetchListCoins(@Query("access_key") apiKey: String): Response<ListApiResponse>
 }
