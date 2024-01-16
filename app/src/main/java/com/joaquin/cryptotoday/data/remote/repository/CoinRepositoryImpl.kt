@@ -6,7 +6,6 @@ import com.joaquin.cryptotoday.data.remote.responses.ListApiResponse
 import com.joaquin.cryptotoday.data.remote.responses.LiveApiResponse
 import com.joaquin.cryptotoday.domain.remote.repository.CoinRepository
 import com.joaquin.cryptotoday.utils.Resource
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 const val DEFAULT_ERROR_MESSAGE = "Unknown Exception occurred"
@@ -18,7 +17,7 @@ class CoinRepositoryImpl(private val cryptoApi: CryptoApi) : CoinRepository {
         try {
             val liveRes = cryptoApi.fetchLiveCoins(BuildConfig.COIN_LAYER_API_KEY)
             val liveResBody = liveRes.body()
-            if (liveRes.isSuccessful && liveResBody != null) {
+            if (liveRes.isSuccessful && liveResBody != null && liveResBody.success) {
                 emit(Resource.Success<LiveApiResponse>(liveResBody))
             } else {
                 emit(Resource.Error<LiveApiResponse>(liveRes.message()))
@@ -33,7 +32,7 @@ class CoinRepositoryImpl(private val cryptoApi: CryptoApi) : CoinRepository {
         try {
             val listRes = cryptoApi.fetchListCoins(BuildConfig.COIN_LAYER_API_KEY)
             val listResBody = listRes.body()
-            if (listRes.isSuccessful && listResBody != null) {
+            if (listRes.isSuccessful && listResBody != null && listResBody.success) {
                 emit(Resource.Success<ListApiResponse>(listResBody))
             } else {
                 emit(Resource.Error<ListApiResponse>(listRes.message()))

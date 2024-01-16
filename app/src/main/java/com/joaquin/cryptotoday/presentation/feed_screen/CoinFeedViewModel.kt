@@ -36,7 +36,7 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
         fetchCoinsFeed()
     }
 
-    private fun fetchCoinsFeed() {
+    fun fetchCoinsFeed() {
         feedFetchingJob?.cancel()//Clear any previous job pending
         feedFetchingJob = viewModelScope.launch() {
             repository.fetchLiveCoins().collectLatest { result ->
