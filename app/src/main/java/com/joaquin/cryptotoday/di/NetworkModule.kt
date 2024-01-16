@@ -1,5 +1,6 @@
 package com.joaquin.cryptotoday.di
 
+import android.util.Log
 import com.google.gson.Gson
 import com.joaquin.cryptotoday.BuildConfig
 import com.joaquin.cryptotoday.data.remote.api.CryptoApi
@@ -41,8 +42,10 @@ object NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            val loggingInterceptor = HttpLoggingInterceptor() {
+                Log.v("provideOkHttpClient", it)
+            }
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
             client.addInterceptor(loggingInterceptor)
         }
         return client.build()
