@@ -2,9 +2,11 @@ package com.joaquin.cryptotoday.presentation.feed_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,11 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,13 +38,32 @@ import com.joaquin.cryptotoday.R
 import com.joaquin.cryptotoday.domain.CoinFeedModel
 import com.joaquin.cryptotoday.presentation.common.ErrorScreen
 import com.joaquin.cryptotoday.presentation.common.LoadingScreen
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CoinFeedScreen() {
     val viewModel: CoinFeedViewModel = viewModel()
     val coinFeedState by viewModel.coinFeed.collectAsState(CoinFeedState(isLoading = true))
 
-    CoinFeedContent(coinFeedState) { viewModel.fetchCoinsFeed() }
+    val refreshState = rememberPullRefreshState(
+        refreshing = coinFeedState.isLoading, onRefresh = viewModel::fetchCoinsFeed
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(refreshState)
+    ) {
+        CoinFeedContent(coinFeedState, viewModel::fetchCoinsFeed)
+        PullRefreshIndicator(
+            state = refreshState, refreshing = coinFeedState.isLoading, modifier = Modifier.align(
+                Alignment.TopCenter
+            )
+        )
+    }
 }
 
 @Composable
