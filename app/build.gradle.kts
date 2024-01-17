@@ -89,6 +89,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation ("androidx.test:core:1.5.0")
 
     //Hilt DI
     implementation("com.google.dagger:hilt-android:2.48")
