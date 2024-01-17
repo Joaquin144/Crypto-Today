@@ -58,3 +58,10 @@ Android app written in Kotlin that displays real-time Crypto Currency Exchange R
     - `res`: Contains resources like layouts, drawables, and values.
 - **Gradle Scripts:**
     - `gradle`: Contains Gradle build scripts.
+ 
+## Profile
+- [LinkedIn](https://www.linkedin.com/in/vibhu-26m): Let's connect and network on LinkedIn.
+
+- [GitHub](https://github.com/Joaquin144): Check out my repositories and contributions on GitHub.
+
+- [Play Store](https://play.google.com/store/apps/developer?id=DevCommOP): Explore my apps on the Play Store.
