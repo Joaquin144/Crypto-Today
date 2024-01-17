@@ -7,9 +7,11 @@ import com.joaquin.cryptotoday.data.remote.responses.ListApiResponse
 import com.joaquin.cryptotoday.data.remote.responses.LiveApiResponse
 import com.joaquin.cryptotoday.domain.CoinFeedModel
 import com.joaquin.cryptotoday.domain.remote.repository.CoinRepository
+import com.joaquin.cryptotoday.utils.Constants
 import com.joaquin.cryptotoday.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -23,6 +25,7 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
     private val _liveCoinsFlow = MutableStateFlow<LiveApiCoinState?>(null)
     private val _listCoinsFlow = MutableStateFlow<ListApiCoinState?>(null)
     private var feedFetchingJob: Job? = null
+    private var pollingJob: Job? = null
 
     //Only This flow would get collected by UI
     val coinFeed: Flow<CoinFeedState> = combine(
@@ -34,6 +37,7 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
 
     init {
         fetchCoinsFeed()
+        startServerPolling()
     }
 
     fun fetchCoinsFeed() {
@@ -125,5 +129,21 @@ class CoinFeedViewModel @Inject constructor(private val repository: CoinReposito
         } else {
             return emptyList()
         }
+    }
+
+    private fun startServerPolling() {
+        pollingJob?.cancel()
+        pollingJob = viewModelScope.launch {
+            while (true) {
+                delay(Constants.SERVER_POLLING_INTERVAL)
+                fetchCoinsFeed()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        feedFetchingJob?.cancel()
+        pollingJob?.cancel()
     }
 }
