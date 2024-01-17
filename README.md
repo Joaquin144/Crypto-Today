@@ -4,6 +4,11 @@
 
 Android app written in Kotlin that displays real-time Crypto Currency Exchange Rates.
 
+<p >
+  <img src="https://github.com/Joaquin144/Crypto-Today/assets/80385154/18687b64-620d-4646-b60b-9a2555fb5761" alt="Crypto Today App Logo" width="250">
+</p>
+
+
 ## Features
 
 - ✅ Live Crypto App with automatic Server polling
