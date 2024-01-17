@@ -17,6 +17,6 @@ data class CoinFeedState(
     //Using init block to set the timestamp
     init {
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss", Locale.getDefault())
-        lastUpdatedTime = sdf.format(Date())
+        lastUpdatedTime = "Last Updated On ${sdf.format(Date())}"
     }
 }

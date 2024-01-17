@@ -5,4 +5,6 @@ data class CoinFeedModel(
     val fullName: String,
     val iconUrl: String,
     val exchangeRate: Double
-)
+) {
+    val exchangeRateRoundedOff = String.format("%.6f", exchangeRate)
+}

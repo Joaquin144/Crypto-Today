@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -48,17 +50,29 @@ fun CoinFeedContent(coinFeedState: CoinFeedState, refreshData: () -> Unit) {
             refreshData()
         }
     } else {
-        CoinList(coins = coinFeedState.feedCoins)
+        CoinList(coinFeedState.lastUpdatedTime, coins = coinFeedState.feedCoins)
     }
 
 }
 
 @Composable
-fun CoinList(coins: List<CoinFeedModel>) {
-    // Display the list of coins
-    LazyColumn {
-        items(items = coins) { coin ->
-            CoinListItem(coin = coin)
+fun CoinList(timestamp: String, coins: List<CoinFeedModel>) {
+    Column {
+        Text(
+            text = timestamp,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(8.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn {
+            items(items = coins) { coin ->
+                CoinListItem(coin = coin)
+            }
         }
     }
 }
@@ -71,14 +85,14 @@ fun CoinListItem(coin: CoinFeedModel) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Coin Icon
         Image(
             painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = coin.iconUrl).apply(block = fun ImageRequest.Builder.() {
-                    placeholder(R.drawable.currency_bitcoin)
-                }).build()
+                ImageRequest.Builder(LocalContext.current).data(data = coin.iconUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        placeholder(R.drawable.currency_bitcoin)
+                    }).build()
             ),
-            contentDescription = null, // Decorative image
+            contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
@@ -90,7 +104,7 @@ fun CoinListItem(coin: CoinFeedModel) {
         // Coin Details
         Column {
             Text(text = "Name: ${coin.fullName}", fontWeight = FontWeight.Bold)
-            Text(text = "Exchange Rate: ${coin.exchangeRate}")
+            Text(text = "Exchange Rate: ${coin.exchangeRateRoundedOff}")
         }
     }
 }
